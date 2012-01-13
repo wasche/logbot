@@ -2,6 +2,7 @@
 
 var irc = require('irc')
   , util = require('util')
+  , format = util.format
   , options = {
       nick: 'logbot'
     , server: 'irc.tripadvisor.com'
@@ -16,10 +17,6 @@ var irc = require('irc')
   , daemon = require('daemon')
   ;
 
-function format(fmt, obj) {
-  return fmt.replace(/%s/g, function(match){ return obj.shift(); });
-}
-
 function strip(str) {
   return str.replace(/^\s+|\s+$/, '');
 }
@@ -30,14 +27,14 @@ function log(channel, message) {
     , out
     ;
 
-  filename = format(filename, [channel.substring(1), now.getFullYear(), now.getMonth()+1, now.getDate()]);
+  filename = format(filename, channel.substring(1), now.getFullYear(), now.getMonth()+1, now.getDate());
 
   out = fs.createWriteStream(filename, {
     flags     : 'a'
   , encoding  : 'utf8'
   , mode      : 0666
   });
-  out.write(format('%s: %s\n', [now.toTimeString(), message]));
+  out.write(format('%s: %s\n', now.toTimeString(), message));
 }
 
 client.addListener('error', function(message) {
@@ -51,41 +48,41 @@ client.addListener('message', function(from, to, message) {
     ;
 
   if (isChannel) {
-    log(target, format('<%s> %s', [from, message]));
+    log(target, format('<%s> %s', from, message));
 
     if (~message.indexOf(options.nick + ':')) {
       var content = strip(message.substring(options.nick.length + 2));
       switch (content) {
         case 'logs':
-          response = format('%s: %s', [from, options.log_url]);
+          response = format('%s: %s', from, options.log_url);
           break;
       }
       if (response) {
         client.say(target, response);
-        log(target, format('<%s> %s', [options.nick, response]));
+        log(target, format('<%s> %s', options.nick, response));
       }
     }
   }
 });
 
 client.addListener('join', function(channel, who) {
-  log(channel, format('%s joined.', [who]));
+  log(channel, format('%s joined.', who));
 });
 
 client.addListener('part', function(channel, who, why) {
-  log(channel, format('%s left (%s).', [who, why]));
+  log(channel, format('%s left (%s).', who, why));
 });
 
 client.addListener('kick', function(channel, who, by, why) {
-  log(channel, format('%s was kicked by %s (%s).', [who, by, why]));
+  log(channel, format('%s was kicked by %s (%s).', who, by, why));
 });
 
 client.addListener('topic', function(channel, topic, who) {
-  log(channel, format('Topic is "%s" (set by %s)', [topic, who]));
+  log(channel, format('Topic is "%s" (set by %s)', topic, who));
 });
 
 
 daemon.daemonize('daemon.log', '/tmp/logbot.pid', function(err, pid) {
-  if (err) { return util.log('Error starting daemon: ' + err); }
-  util.log('Daemon started with pid: ' + pid);
+  if (err) { return console.log('Error starting daemon: ' + err); }
+  console.log('Daemon started with pid: ' + pid);
 });
