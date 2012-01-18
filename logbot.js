@@ -2,12 +2,14 @@
 
 var irc = require('irc')
   , util = require('util')
+  , path = require('path')
   , format = util.format
   , options = {
       nick: 'logbot'
     , server: 'irc.tripadvisor.com'
     , channels: ['#social']
-    , log_url: 'http://irc.tripadvisor.com/irclogs/'
+    , log_url: 'http://irc.tripadvisor.com/logs/'
+    , logdir: '/var/www/irc-logs/'
     }
   , client = new irc.Client(options.server, options.nick, {
       channels: options.channels
@@ -22,7 +24,7 @@ function strip(str) {
 }
 
 function log(channel, message) {
-  var filename = './logs/%s-%s-%s-%s.txt'
+  var filename = path.join(options.logdir, '%s-%s-%s-%s.txt')
     , now = new Date()
     , out
     ;
