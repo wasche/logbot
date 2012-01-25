@@ -16,7 +16,6 @@ var irc = require('irc')
     , secure: false
     })
   , fs = require('fs')
-  , daemon = require('daemon')
   ;
 
 function strip(str) {
@@ -81,10 +80,4 @@ client.addListener('kick', function(channel, who, by, why) {
 
 client.addListener('topic', function(channel, topic, who) {
   log(channel, format('Topic is "%s" (set by %s)', topic, who));
-});
-
-
-daemon.daemonize('daemon.log', '/tmp/logbot.pid', function(err, pid) {
-  if (err) { return console.log('Error starting daemon: ' + err); }
-  console.log('Daemon started with pid: ' + pid);
 });
