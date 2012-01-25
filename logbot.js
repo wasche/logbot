@@ -18,6 +18,10 @@ var irc = require('irc')
   , fs = require('fs')
   ;
 
+function zeropad(n) {
+  return (n.toString()).replace(/^(\d)$/,'0$1');
+}
+
 function strip(str) {
   return str.replace(/^\s+|\s+$/, '');
 }
@@ -28,7 +32,12 @@ function log(channel, message) {
     , out
     ;
 
-  filename = format(filename, channel.substring(1), now.getFullYear(), now.getMonth()+1, now.getDate());
+  filename = format(filename,
+    channel.substring(1),
+    now.getFullYear(),
+    zeropad(now.getMonth()+1),
+    zeropad(now.getDate())
+  );
 
   out = fs.createWriteStream(filename, {
     flags     : 'a'
