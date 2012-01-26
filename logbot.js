@@ -11,7 +11,7 @@ var irc = require('irc')
     , channels: []
     , log_url: 'http://irc.example.com/logs/'
     , log_dir: '/var/www/irc-logs/'
-    }, require('./config')
+    }, require('./config'))
   , client = new irc.Client(options.server, options.nick, {
       channels: options.channels
     , secure: false
