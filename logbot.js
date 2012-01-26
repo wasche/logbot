@@ -10,7 +10,7 @@ var irc = require('irc')
     , server: 'irc.example.com'
     , channels: []
     , log_url: 'http://irc.example.com/logs/'
-    , logdir: '/var/www/irc-logs/'
+    , log_dir: '/var/www/irc-logs/'
     }, require('./config')
   , client = new irc.Client(options.server, options.nick, {
       channels: options.channels
@@ -28,7 +28,7 @@ function strip(str) {
 }
 
 function log(channel, message) {
-  var filename = path.join(options.logdir, '%s-%s-%s-%s.txt')
+  var filename = path.join(options.log_dir, '%s-%s-%s-%s.txt')
     , now = new Date()
     , out
     ;
@@ -67,6 +67,21 @@ client.addListener('message', function(from, to, message) {
         case 'logs':
           response = format('%s: %s', from, options.log_url);
           break;
+      }
+      if (response) {
+        client.say(target, response);
+        log(target, format('<%s> %s', options.nick, response));
+      }
+    } else if ('!' === message[0]) {
+      var p = message.slice(1).split(' ')
+        , cmd = p[0]
+        , rest = p.slice(1).join()
+        ;
+
+      if ('help' === cmd) {
+        response = format('%s: !help !logs', from);
+      } else if ('logs' === cmd) {
+        response = format('%s: %s', from, options.log_url);
       }
       if (response) {
         client.say(target, response);
