@@ -1,0 +1,5 @@
+ul
+  - for (var channel in channels)
+    li
+      a(href=base+"/logs/#{channel}")
+        = channel

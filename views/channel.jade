@@ -1,0 +1,14 @@
+dl
+  - for (var y in logs)
+    dt= y
+    dd
+      table
+        - for (var m in logs[y])
+          tr
+            td.month=MONTHS[m-1]
+            - for (var d in logs[y][m])
+              - var month = zeropad(m)
+              - var day = zeropad(d)
+              td.day
+                a(href=base+"/logs/#{channel}/#{y}/#{month}/#{day}")
+                  =d

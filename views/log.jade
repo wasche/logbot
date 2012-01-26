@@ -1,0 +1,13 @@
+article
+  header
+    - var d = date.getDate()
+    - var m = MONTHS[date.getMonth()]
+    - var y = date.getFullYear()
+    h2 #{channel} #{d} #{m} #{y}
+
+  table.log
+    each line in lines
+      tr
+        td.time [#{zeropad(line.timestamp.getHours())}:#{zeropad(line.timestamp.getMinutes())}]
+        td.user &lt;#{line.user}&gt;
+        td.text= line.text
