@@ -4,13 +4,14 @@ var irc = require('irc')
   , util = require('util')
   , path = require('path')
   , format = util.format
-  , options = {
+  , merge = require('object-merge').merge
+  , options = merge({
       nick: 'logbot'
-    , server: 'irc.tripadvisor.com'
-    , channels: ['#social']
-    , log_url: 'http://irc.tripadvisor.com/logs/'
+    , server: 'irc.example.com'
+    , channels: []
+    , log_url: 'http://irc.example.com/logs/'
     , logdir: '/var/www/irc-logs/'
-    }
+    }, require('./config')
   , client = new irc.Client(options.server, options.nick, {
       channels: options.channels
     , secure: false

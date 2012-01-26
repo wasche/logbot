@@ -1,3 +1,4 @@
 node_modules
 daemon.log
 logs
+config.js
