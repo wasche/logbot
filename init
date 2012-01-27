@@ -1,4 +1,6 @@
-s some perhaps unnecessary complexity going on in the relationship between
+#!/bin/sh
+#
+#s some perhaps unnecessary complexity going on in the relationship between
 #  Forever and the server process. See: https://github.com/indexzero/forever
 #
 # 1) Forever starts its own watchdog process, and keeps its own configuration data 
@@ -25,15 +27,15 @@ s some perhaps unnecessary complexity going on in the relationship between
 
 NAME=logbot
 SOURCE_DIR=/usr/local/logbot
-SOURCE_FILE=logbot.js
+SOURCE_FILE=index.js
 user=unreal
 
 pidfile=/var/run/$NAME.pid
 logfile=/var/log/$NAME.log
 forever_dir=/var/run/forever
 
-node=node
-forever=forever
+node=/usr/local/bin/node
+forever=/usr/local/bin/forever
 sed=sed
 
 export PATH=$PATH
@@ -51,8 +53,8 @@ start() {
 
     # Launch the application
     daemon --user=root \
-      $forever start -p $forever_dir --pidfile $pidfile -l $logfile \
-      -a -d $SOURCE_DIR $SOURCE_FILE
+      ${forever} start -p $forever_dir --pidfile $pidfile -l $logfile \
+      -a --sourceDir $SOURCE_DIR $SOURCE_FILE
     RETVAL=$?
   else
     echo "Instance already running"
