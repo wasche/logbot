@@ -27,7 +27,7 @@
 
 NAME=logbot
 SOURCE_DIR=/usr/local/logbot
-SOURCE_FILE=index.js
+SOURCE_FILE=logbot.js
 user=unreal
 
 pidfile=/var/run/$NAME.pid
